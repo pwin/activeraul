@@ -7,6 +7,7 @@ public class UserManager {
 	
 	public UserManager() {
 		_defaultUser = RaULProperties.getProperties().getProperty("public.user", "public");
+		//_defaultUser = RaULProperties.getProperties().getProperty("testuser.user", "testuser");
 	}
 	
 	public boolean isAutenticated(String username, String credentials) {

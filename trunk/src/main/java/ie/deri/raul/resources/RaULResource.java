@@ -110,6 +110,8 @@ public class RaULResource {
 			_repository = RDFRepositoryFactory.createRepository();
 			_dataGraph =  RDFRepositoryFactory.createInMemoryRepository();
 			_tmpGraph =  RDFRepositoryFactory.createInMemoryRepository();
+			
+			//_repository.clearRepository();
 		} catch (RepositoryException e) {
 			final String msg = "Cannot initiate connection to RDF repository!";
 			_logger.fatal(msg, e);
@@ -124,6 +126,13 @@ public class RaULResource {
 		
 		// initialize storage for mapping a user name to highest available id (for identifying a form data instance)
 		//_user2IdMap = Collections.synchronizedMap(new HashMap<String, Integer>());
+		
+		try {
+			rebuild_urls2ontologyMap();
+		} catch (RepositoryException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				
 		_logger.info("Initializing RaUL Resource...(done)");	//added by pcc 19,Sep.11
 	}
@@ -271,6 +280,44 @@ public class RaULResource {
 		return handler.getPageId();	
 	}
 
+	private void rebuild_urls2ontologyMap() throws RepositoryException{
+		String contextType, tmpContext, iri, formId, userId, dataId, var;
+		int indexOf_forms, indexOf_service;
+
+		Set<String> set = _repository.listContexts(); 
+		
+		Iterator<String> iterator = set.iterator();
+        while(iterator.hasNext()) {
+        	tmpContext = iterator.next();
+        	contextType = tmpContext.substring(tmpContext.lastIndexOf("-"));
+            if(contextType.equals("-formDefinition")){	
+            	indexOf_forms = tmpContext.lastIndexOf("/forms/");
+            	indexOf_service = tmpContext.lastIndexOf("/service/");
+            	            	
+            	iri = tmpContext.substring(0, tmpContext.lastIndexOf("-"));
+            	userId = tmpContext.substring(indexOf_service + "/service/".length() , indexOf_forms);
+            	formId = iri.substring(iri.lastIndexOf("/") + 1);
+            	var = userId + '/' + formId;
+            	_urls2ontologyMap.put(var, new InstanceIds(iri, tmpContext));
+            	
+            }
+            else if(contextType.equals("-formData")){
+
+            	indexOf_forms = tmpContext.lastIndexOf("/forms/");
+            	indexOf_service = tmpContext.lastIndexOf("/service/");
+            	            	
+            	iri = tmpContext.substring(0, tmpContext.lastIndexOf("-"));
+            	userId = tmpContext.substring(indexOf_service + "/service/".length() , indexOf_forms);
+            	formId = tmpContext.substring(indexOf_forms + "/forms/".length() , tmpContext.lastIndexOf("/"));
+            	dataId = tmpContext.substring(tmpContext.lastIndexOf("/") + 1, tmpContext.lastIndexOf("-"));
+            	
+            	var = userId + '/' + formId + '/' + dataId;            	
+        		_urls2ontologyMap.put(var, new InstanceIds(iri, tmpContext));
+            	
+            }            
+        }
+	}
+	
 	private String storeFormDefinitionUrl(String userId, String formId, String iri) throws PersistenceException {
 		String context = "";
 		
@@ -516,8 +563,9 @@ public class RaULResource {
 				_repository.dumpRDF(rdfWriter, fData.getContext());
 				result = out.toString();				
 				resultType = MediaType.APPLICATION_XML_TYPE;
-								
-				//_repository.clearRepository();
+				
+//				_logger.info("***********");
+//				_repository.clearRepository();
 			}
 
 		} catch (Exception e) {
@@ -577,10 +625,14 @@ public class RaULResource {
 			
 			int index = formIri.lastIndexOf("/");	//modified by pcc 13,Jul.11
 			String context = "";
-						
-			String tmpString = content.substring(content.indexOf("<rdf:subject>"), content.indexOf("</rdf:subject>"));			
+			_logger.info("index: " + index);		
+			String tmpString = content.substring(content.indexOf("<rdf:subject>"), content.indexOf("</rdf:subject>"));
+			_logger.info("tmpString: " + tmpString);
 			String tmpSubjectKey = tmpString.substring(tmpString.lastIndexOf("/") + 1);
+			_logger.info("tmpSubjectKey: " + tmpSubjectKey);
 			String subjectKey = storeFormDataUrl(userId, formIri.substring(index + 1), tmpSubjectKey, formIri);
+			
+			//_logger.info("index: " + index + " tmpString: " + tmpString + " tmpSubjectKey: " + tmpSubjectKey + " subjectKey: " + subjectKey);
 			
 			if(!(tmpSubjectKey.equals(subjectKey))){
 				content = content.replaceAll("(/{1})(" + tmpSubjectKey + ")(<{1})", "/" + subjectKey + "<");
@@ -647,7 +699,10 @@ public class RaULResource {
 						.entity(String.format("Parameter '%s' is not valid.",
 								formId)).build();
 			}
-			org.openrdf.model.URI uri = _repository.URIref(fData.getIri());			
+			org.openrdf.model.URI uri = _repository.URIref(fData.getIri());
+			
+			_logger.info("fData.getIri() " + fData.getIri());
+			_logger.info("fData.getContext() " + fData.getContext());
 			
 			// instantiate the corresponding writer element
 			if (acceptTypes.contains(RDFMediaType.APPLICATION_RDFJSON_TYPE)
