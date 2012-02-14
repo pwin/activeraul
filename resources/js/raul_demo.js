@@ -51,7 +51,7 @@ function initDemo(){
 
 jQuery(document).ready(
 	function(){
-		initRaulForntEnd();
+		initRaulFrontEnd();
 		initDemo();
 		
 		jQuery("textarea#showrdf").load(rdfFormDef, function(){editor.setValue(jQuery("textarea#showrdf").val());});
@@ -74,11 +74,12 @@ jQuery(document).ready(
 		jQuery('#formupdate').click(function() {
 			editor.save();
 			showProcessingInfo();
+			 
+			var tmpURI = jQuery("input#formURI").val();
+			tmpURI = getBaseURL() + tmpURI.substring(tmpURI.indexOf("raul/"));
+			putForm(tmpURI, document.getElementById('showrdf').value);
+            jQuery("input#serviceURL").val(tmpURI);
 			
-			putForm(jQuery("input#formURI").val(), document.getElementById('showrdf').value);
-			jQuery("input#serviceURL").val(jQuery("input#formURI").val());
-			
-			//document.getElementById('content').innerHTML = processingInfo + getForm(jQuery("input#serviceURL").val());
 			document.getElementById('content').innerHTML = 
 			processingInfo + createLink(jQuery("input#serviceURL").val()) + 
 			getForm(jQuery("input#serviceURL").val());
@@ -136,6 +137,26 @@ function submitDataWrap(){
 	jQuery("textarea#showrdf").val("");
 	var rdf = parseDom("content");
 	var rdfString = rdf.databank.dump({format:'application/rdf+xml', serialize: true});
+	
+	if(agentName == "ChromeSafari"){
+		var regex=/raul:subject xmlns:raul=\"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#\"/g;
+		rdfString = rdfString.replace(regex, "rdf:subject");
+		regex=/raul:predicate xmlns:raul=\"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#\"/g;
+		rdfString = rdfString.replace(regex, "rdf:predicate");
+		regex=/raul:object xmlns:raul=\"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#\"/g;
+		rdfString = rdfString.replace(regex, "rdf:object");
+		regex=/xmlns:raul=\"http:\/\/www.w3.org\/1999\/02\/22-rdf-syntax-ns#\"/g;
+		rdfString = rdfString.replace(regex, "");
+		regex=/raul:_/g;
+		rdfString = rdfString.replace(regex, "rdf:_");		
+		regex=/raul:subject/g;
+		rdfString = rdfString.replace(regex, "rdf:subject");
+		regex=/raul:predicate/g;
+		rdfString = rdfString.replace(regex, "rdf:predicate");
+		regex=/raul:object/g;
+		rdfString = rdfString.replace(regex, "rdf:object");
+		
+	}
 	
 	editor.setValue(formatXml(rdfString));	
 	
