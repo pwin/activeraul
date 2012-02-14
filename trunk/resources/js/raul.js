@@ -2,10 +2,11 @@
 var serviceURI = "/raul/service/public/forms";
 var postType = "application/rdf+xml";
 var xmlDisplayingMethod = "view-source:data:text/html;,";
+var agentName = "firefox";
 
 //Global variables Declaration End
 
-function initRaulForntEnd(){
+function initRaulFrontEnd(){
 	agentType();
 }
 
@@ -29,10 +30,12 @@ function agentType(){
     if (Sys.firefox){
 		postType = "application/rdf+xml";
 		xmlDisplayingMethod = "view-source:data:text/html;,";
+		agentName = "firefox";
 	}
     if (Sys.chrome || Sys.safari){
 		postType = "application/xml";
 		xmlDisplayingMethod = "data:text/xml;,";
+		agentName = "ChromeSafari";
 	}
 }
 
@@ -61,7 +64,7 @@ function showXML(s){
 /*
 function postForm(formDef)
 Description:
-	To deploy a RaUL-based form (post a form definition).
+	For creating a RaUL-based form (post a form definition).
 Parameters: 
 	formDef -- The form definition described in RDF/XML format (string type).
 Retrun values:
@@ -86,7 +89,7 @@ function postForm(formDef){
 }
 
 function putForm(formURI, formDef){
-	formDef = assignDefaultURI(formDef);	
+	formDef = assignDefaultURI(formDef);
 	jQuery.ajax({					
 			type: 'PUT',
 			async: false,
@@ -200,7 +203,7 @@ function updateSoG(xmlJqueryObject, VoGF, subjectOfGroupFields){
 /*
 function getForm(formURI)
 Description:
-	To retrive a form.
+	For retrieving an exist form.
 Parameters: 
 	formURI -- The form URI.
 Return value:
@@ -226,7 +229,7 @@ function getForm(formURI){
 /*
 function postData(formURI, data)
 Description:
-	To submit user input data to the server.
+	For submitting user input data to the server.
 Parameters: 
 	formURI -- The form URI.
 	userInputData -- The user input data.
@@ -320,6 +323,7 @@ Parameters:
 function parseDom(contentID){
 	
 	var url="", sHKey="", sHKeyCount=0; //for the subject hash key generation
+	var identifier="";
 	
 	log.profile("Updating raul:Textbox span elements");
 	jQuery("[typeof='raul:Textbox']").each(
@@ -346,10 +350,21 @@ function parseDom(contentID){
 			//for the subject hash key generation
 			var predValue ="";			
 			predValue = jQuery("[about='"+ about +"']").children("[property='rdf:predicate']").text();      
+			if((objectValue != "") && (predValue != "owl:sameAs")){
+				if(jQuery(el).find("span[property=raul:isIdentifier]").text() == "true"){
+					identifier = identifier + Trim(objectValue, 'g');
+				}
+				else if(sHKeyCount < 2){
+					sHKey = sHKey + Trim(objectValue, 'g');    
+					sHKeyCount++;
+				}
+			}
+			/*
 			if((sHKeyCount < 2) && (objectValue != "") && (predValue != "owl:sameAs")){
 				sHKey = sHKey + Trim(objectValue, 'g');              
-				sHKeyCount++;         
-		      }
+				sHKeyCount++;
+		    }
+			*/
 		      //for the subject hash key generation
 		}
 	);	
@@ -369,10 +384,22 @@ function parseDom(contentID){
 				
 				var selectedLabel = jQuery(el).find("span[property=raul:label]").text();
 				selectedLabel = Trim(selectedLabel, 'g');
+				
+				if(selectedLabel != ""){
+					if(jQuery(el).find("span[property=raul:isIdentifier]").text() == "true"){
+						identifier = identifier + selectedLabel;
+					}
+					else if(sHKeyCount < 2){
+						sHKey = sHKey + selectedLabel;
+						sHKeyCount++;
+					}
+				}
+				/*
 				if((sHKeyCount < 2) && (selectedLabel != "")){
 					sHKey = sHKey + selectedLabel;
-					sHKeyCount++;         
-				}				
+					sHKeyCount++;
+				}
+				*/
 			}
 			else{				
 				appendLocation.after("\n\t\t\t<span property=\"raul:checked\" datatype=\"xsd:boolean\">false</span>");				
@@ -395,10 +422,22 @@ function parseDom(contentID){
 				//for the subject hash key generation
 				var selectedLabel = jQuery(el).find("span[property=raul:label]").text();
 				selectedLabel = Trim(selectedLabel, 'g');
+				
+				if(selectedLabel != ""){
+					if(jQuery(el).find("span[property=raul:isIdentifier]").text() == "true"){
+						identifier = identifier + selectedLabel;
+					}
+					else if(sHKeyCount < 2){
+						sHKey = sHKey + selectedLabel;
+						sHKeyCount++;
+					}
+				}
+				/*
 				if((sHKeyCount < 2) && (selectedLabel != "")){
 					sHKey = sHKey + selectedLabel;
-					sHKeyCount++;         
+					sHKeyCount++;
 				}
+				*/
 				//for the subject hash key generation
 			}
 			else{				
@@ -424,10 +463,21 @@ function parseDom(contentID){
 				//for the subject hash key generation
 				var selectedLabel = jQuery(el).find("span[property=raul:label]").text();
 				selectedLabel = Trim(selectedLabel, 'g');
+				if(selectedLabel != ""){
+					if(jQuery(el).find("span[property=raul:isIdentifier]").text() == "true"){
+						identifier = identifier + selectedLabel;
+					}
+					else if(sHKeyCount < 2){
+						sHKey = sHKey + selectedLabel;
+						sHKeyCount++;
+					}
+				}
+				/*
 				if((sHKeyCount < 2) && (selectedLabel != "")){
 					sHKey = sHKey + selectedLabel;
-					sHKeyCount++;         
+					sHKeyCount++;
 				}
+				*/
 				//for the subject hash key generation
 			}
 			else{				
@@ -468,12 +518,14 @@ function parseDom(contentID){
 			
 	//for the subject hash key generation	
 	var regex=/defaultInstanceGraph/g;
-	var oldResourceURI = "", newResourceURI = "";	
+	var oldResourceURI = "", newResourceURI = "";
+	var newURI = "";
+	if(identifier != ""){newURI = identifier;}else{newURI = sHKey;}
 	//jQuery("[property='rdf:subject']").each(
 	jQuery("[property='rdf:subject'],[property='rdf:object']").each(
 		function(index, el){						
 			oldResourceURI = jQuery(el).text();
-            newResourceURI = oldResourceURI.replace(regex, sHKey);
+            newResourceURI = oldResourceURI.replace(regex, newURI);
             jQuery(el).text(newResourceURI);
 		}
 	);
@@ -488,6 +540,27 @@ function parseDom(contentID){
 	rdf.prefix('dcterms', 'http://purl.org/dc/terms/');
 
 	return rdf;
+}
+
+function getBaseURL() {
+    var url = location.href;  // entire url including querystring - also: window.location.href;
+    var baseURL = url.substring(0, url.indexOf('/', 14));
+
+    if (baseURL.indexOf('http://localhost') != -1) {
+        // Base Url for localhost
+        var url = location.href;  // window.location.href;
+        var pathname = location.pathname;  // window.location.pathname;
+        var index1 = url.indexOf(pathname);
+        var index2 = url.indexOf("/", index1 + 1);
+        var baseLocalUrl = url.substr(0, index2);
+
+        return baseLocalUrl + "/";
+    }
+    else {
+        // Root Url for domain name
+        return baseURL + "/";
+    }
+
 }
 
 /*

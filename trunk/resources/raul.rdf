@@ -18,6 +18,7 @@
     <vann:preferredNamespaceUri>http://purl.org/NET/raul#</vann:preferredNamespaceUri>
     <vann:preferredNamespacePrefix>raul</vann:preferredNamespacePrefix>
     <dc:creator rdf:resource="http://vocab.deri.ie/raul#ahaller"/>
+	<dc:creator rdf:resource="http://vocab.deri.ie/raul#pcchen"/>
     <dc:creator rdf:resource="http://vocab.deri.ie/raul#juum"/>
     <dc:creator rdf:resource="http://vocab.deri.ie/raul#Michael%20Hausenblas"/>
   </foaf:Document>
@@ -29,6 +30,15 @@
   <foaf:Organization rdf:about="http://vocab.deri.ie/raul#CSIRO">
     <foaf:member rdf:resource="http://vocab.deri.ie/raul#ahaller"/>
     <foaf:name>CSIRO</foaf:name>
+  </foaf:Organization>
+  
+  <foaf:Person rdf:about="http://vocab.deri.ie/raul#pcchen">
+    <foaf:name>Po-Cheng Chen</foaf:name>
+  </foaf:Person>
+  
+  <foaf:Organization rdf:about="http://vocab.deri.ie/raul#NCKU">
+    <foaf:member rdf:resource="http://vocab.deri.ie/raul#pcchen"/>
+    <foaf:name>NCKU</foaf:name>
   </foaf:Organization>
 
   <foaf:Person rdf:about="http://vocab.deri.ie/raul#juum">
@@ -184,6 +194,14 @@
     <rdfs:isDefinedBy rdf:resource="http://vocab.deri.ie/raul"/>
     <rdfs:label>isPassword</rdfs:label>
     <rdfs:domain rdf:resource="http://purl.org/NET/raul#Textbox"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+  </rdf:Property>
+  
+  <rdf:Property rdf:about="http://purl.org/NET/raul#isIdentifier">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <rdfs:isDefinedBy rdf:resource="http://vocab.deri.ie/raul"/>
+    <rdfs:label>isIdentifier</rdfs:label>
+    <rdfs:domain rdf:resource="http://purl.org/NET/raul#Widget"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
   </rdf:Property>
 

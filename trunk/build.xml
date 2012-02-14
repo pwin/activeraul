@@ -15,7 +15,7 @@
 	<property name="webapp.dir" value="webapp"/>
 	<property name="webapps.libs" value="${webapp.dir}/libs" />
 	<property environment="env"/>
-	<property name="tomcat.manager" value="" />
+	<property name="tomcat.manager" value="http://w3c-org-au.vm.csiro.au" />
 	<property name="tomcat.username" value="" />
 	<property name="tomcat.password" value="" />
   
