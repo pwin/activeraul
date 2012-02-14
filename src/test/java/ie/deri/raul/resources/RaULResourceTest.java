@@ -115,7 +115,7 @@ public class RaULResourceTest extends JerseyTest {
 		String request = readFile("foafedit_example.rdf");		
 		_logger.debug("Request: " + request);		
 		WebResource r = resource();		
-		ClientResponse response =  r.path("public/forms").
+		ClientResponse response =  r.path("public/forms").		
 			type(RDFMediaType.APPLICATION_RDFXML).	    
 			post(ClientResponse.class, request);			
 		//System.out.println("Location header: " + response.getHeaders().get(HttpHeaders.LOCATION).get(0));	
@@ -240,6 +240,7 @@ public class RaULResourceTest extends JerseyTest {
 		String request = readFile("foafedit_empty_form.rdf");
 		WebResource r = resource();		
 		ClientResponse response1 =  r.path("public/forms/").
+		//ClientResponse response1 =  r.path("testuser/forms/").
 			type(RDFMediaType.APPLICATION_RDFXML).			
 			post(ClientResponse.class, request);
 		assertEquals(Status.CREATED, response1.getClientResponseStatus());		
@@ -261,6 +262,7 @@ public class RaULResourceTest extends JerseyTest {
 		testPOSTRaulFormRDFXMLWithoutHeader();	//post a form definition
 		
 		ClientResponse getResponse = r.path("public/forms/foafedit").
+		//ClientResponse getResponse = r.path("testuser/forms/foafedit").
 			accept(MediaType.APPLICATION_XHTML_XML).
 			get(ClientResponse.class);
 		System.out.println(getResponse.getEntity(String.class));
@@ -269,12 +271,14 @@ public class RaULResourceTest extends JerseyTest {
 		testPOSTRaulFormRDFXMLWithoutHeader();	//post another form definition
 		
 		ClientResponse getResponse1 = r.path("public/forms/foafedit1").
+		//ClientResponse getResponse1 = r.path("testuser/forms/foafedit1").
 			accept(MediaType.APPLICATION_XHTML_XML).
 			get(ClientResponse.class);
 		System.out.println(getResponse1.getEntity(String.class));
 		assertEquals(Status.OK, getResponse1.getClientResponseStatus());
 				
 		ClientResponse getResponse2 = r.path("public/forms/wrongid").
+		//ClientResponse getResponse2 = r.path("testuser/forms/foafeditxxx").
 			accept(MediaType.APPLICATION_XHTML_XML).
 			get(ClientResponse.class);			
 		System.out.println(getResponse2.getEntity(String.class));
@@ -312,6 +316,29 @@ public class RaULResourceTest extends JerseyTest {
 		System.out.println(getResponse1.getEntity(String.class));
 		assertEquals(Status.BAD_REQUEST, getResponse1.getClientResponseStatus());
 	}
+	
+//	@Test
+//	public void specialTestGETRaulDataXHTML() throws Exception {
+//		WebResource r = resource();
+//
+//		testPOSTRaulFormRDFXMLWithoutHeader();	//post a form definition
+//		testPOSTRaulFormRDFXMLWithoutHeader();	//post a form definition
+//		testPOSTRaulFormRDFXMLWithoutHeader();	//post a form definition
+//		testPOSTRaulFormRDFXMLWithoutHeader();	//post a form definition
+//		
+//		String request = readFile("test.rdf");				
+//		ClientResponse response1 =  r.path("public/forms/foafedit3").
+//			type(RDFMediaType.APPLICATION_RDFXML).			
+//			post(ClientResponse.class, request);
+//		assertEquals(Status.CREATED, response1.getClientResponseStatus());
+//		
+//		//get the data instance
+//		ClientResponse getResponse = r.path("public/forms/foafedit3/Dr.Chen").		
+//			accept(MediaType.APPLICATION_XHTML_XML).
+//			get(ClientResponse.class);		
+//		System.out.println(getResponse.getEntity(String.class));
+//		assertEquals(Status.OK, getResponse.getClientResponseStatus());		
+//	}
 
 	@Test
 	public void testPUTRaulFormXHTML() throws Exception {

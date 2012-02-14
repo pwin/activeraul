@@ -104,6 +104,7 @@ public class ActiveRaULProcessor implements IRaULProcessor {
 	org.openrdf.model.URI raulclass;
 	org.openrdf.model.URI raulid;
 	org.openrdf.model.URI raulhidden;
+	org.openrdf.model.URI raulisIdentifier;	//added by pcc 27Jan12
 	org.openrdf.model.URI raulchecked;
 	org.openrdf.model.URI rauldisabled;
 	org.openrdf.model.URI raulrow;
@@ -827,6 +828,10 @@ public class ActiveRaULProcessor implements IRaULProcessor {
 		Set<String> ButtonTitles = button.getRaulTitles();
 		writeStringProperty(raultitle, ButtonTitles, 2, writer, _repository);
 		
+		//Write the isIdentifier property //added by pcc 27Jan12
+		Set<Boolean> ButtonIsIdentifiers = button.getRaulIsIdentifier();
+		writeBooleanProperty(raulisIdentifier, ButtonIsIdentifiers, 2, writer, _repository);
+		
 		//Write the group property //added by pcc 22Nov11
 		Set<Group> groups = button.getRaulGroups();
 		writeGroupsProperty(groups, 2, writer, _repository);
@@ -982,6 +987,10 @@ public class ActiveRaULProcessor implements IRaULProcessor {
 					// property
 					Set<String> ListitemTitles = listitem.getRaulTitles();
 					writeStringProperty(raultitle, ListitemTitles, 2, writer, _repository);
+					
+					//Write the isIdentifier property //added by pcc 27Jan12
+					Set<Boolean> ListitemIsIdentifiers = listitem.getRaulIsIdentifier();
+					writeBooleanProperty(raulisIdentifier, ListitemIsIdentifiers, 2, writer, _repository);
 
 					// Write the value
 					// property
@@ -1146,6 +1155,10 @@ public class ActiveRaULProcessor implements IRaULProcessor {
 		//Write the group property //added by pcc 22Nov11
 		Set<Group> groups = textbox.getRaulGroups();
 		writeGroupsProperty(groups, 2, writer, _repository);
+		
+		//Write the isIdentifier property //added by pcc 27Jan12
+		Set<Boolean> textboxIsIdentifiers = textbox.getRaulIsIdentifier();
+		writeBooleanProperty(raulisIdentifier, textboxIsIdentifiers, 2, writer, _repository);
 
 		// Write the value property
 		Set<String> textboxValues = textbox.getRaulValues();
@@ -1714,6 +1727,8 @@ public class ActiveRaULProcessor implements IRaULProcessor {
 		raulid = _repository.URIref("http://purl.org/NET/raul#id");
 
 		raulhidden = _repository.URIref("http://purl.org/NET/raul#hidden");
+		
+		raulisIdentifier = _repository.URIref("http://purl.org/NET/raul#isIdentifier");
 
 		raulselected = _repository.URIref("http://purl.org/NET/raul#selected");
 

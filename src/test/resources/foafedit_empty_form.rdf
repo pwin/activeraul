@@ -76,7 +76,8 @@
 	<raul:label rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Title (Mr, Mrs, Dr, etc)</raul:label>
 	<raul:id>title</raul:id>
 	<raul:name>title</raul:name>
-	<raul:value>http://w3c.org.au/raul/service/public/forms/foafedit#value_title</raul:value>	
+	<raul:value>http://w3c.org.au/raul/service/public/forms/foafedit#value_title</raul:value>
+	<raul:isIdentifier rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</raul:isIdentifier>	
 </rdf:Description>
 
 <rdf:Description rdf:about="http://w3c.org.au/raul/service/public/forms/foafedit#value_title">	

@@ -12,6 +12,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -284,15 +285,23 @@ public class RDFRepository {
 	
 	public void clearRepository() throws RepositoryException{
 		RepositoryConnection con = _repository.getConnection();
-//		Resource tmpContextID;
-//		RepositoryResult<Resource> 	_repositoryContexts = con.getContextIDs();		
-//		while (_repositoryContexts.hasNext()) {
-//			tmpContextID = _repositoryContexts.next();
-//			_logger.info(tmpContextID.toString());
-//			con.clear(tmpContextID);
-//		}
 		con.clear();
 	}
+	
+	public Set<String> listContexts() throws RepositoryException{
+		Set<String> set = new HashSet<String>();
+        
+		RepositoryConnection con = _repository.getConnection();
+		Resource tmpContextID;
+		RepositoryResult<Resource> 	_repositoryContexts = con.getContextIDs();		
+		while (_repositoryContexts.hasNext()) {
+			tmpContextID = _repositoryContexts.next();
+			set.add(tmpContextID.toString());
+		}
+		return set;
+		
+	}
+	
 
 	/**
 	 * Convenience URI import for RDF/XML sources
