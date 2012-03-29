@@ -1,99 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
+<html>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<title>RaUL</title>
+<link rel="stylesheet" href="stylesheets/main.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<body class="home">
+	<article><div class="billboard">
+		<a href="about/framework.html"><img src="images/raul.jpg" alt=""/></a>
+		<hgroup>
+			<h1><a href="about/framework.html">RaUL</a></h1>
+			<h2>
+				<a href="about/lifecycle.html#deployment">Deploy.</a>
+				<a href="about/lifecycle.html#modelling">Create.</a>
+				<a href="about/lifecycle.html#use">Use.</a>
+			</h2>
+			<h3><a href="about/lifecycle.html">Maintaining Linked Data via simple Web forms</a></h3>
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<head>
-    <link rel="stylesheet" href="css/raul.css">
-	<title>RaUl</title>
+		</hgroup>
+<p><br/>The RaUL framework let users interact with RDF data over simple Web forms. See it in action <a href="demo/demo.html">here</a>. The Web service can automatically render Web forms with a binding to an RDF graph maintained via RDFa annotations. The data in the Web form is automatically mapped to concepts in a Web ontology. By the virtue of typing Web form elements via RDF ontologies, existing Linked Data can be fetched at run-time from any Web resource to pre-populate a Web form. <a href="about/framework.html">more</a></p>
+	</div></article>
+
+	<aside>
+		<div class="section">
+			<h2><a href="about/framework.html#raul">RaUL</a></h2>
+			<p>RaUL, the RDFa User Interface Language, is a user interface markup ontology that can be used to describe the structure of a Web form as RDF statements. <a href="about/framework.html#raul">Learn</a> about the semantic concepts behind RaUL.</p>
+		</div>
 	
-</head>
+		<div class="section">
+			<h2><a href="about/framework.html#activeraul">ActiveRaUL</a></h2>
+			<p>A generic Web service, that coupled with a generic client servlet, generates a user interface model for semantic Web applications. <a href="about/framework.html#activeraul">Learn</a> about the ActiveRaUL Web service functionality and its endpoints.</p>
+		</div>
+		
+	</aside>
 
-<body>
-<div id="frame">
-    <div id="header">
-       <h1>RaUL</h1>
-    </div>
-     <div id="nav">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="widgets.html">Widgets</a></li>
-                <li><a href="demo.html">Demo</a></li>
-                </ul>
-                </div>
-    <div id="content_main">
-        <h2>Overview</h2>
-The ActiveRaUL system consists of two main parts:
-<ul>
-               <li>
-<b>RESTful Web service</b> that provides a uniform way to manage widgets and the
-data that is processed by the widgets. It supports CRUD operations, such as storing and querying RDF data, on the underlying data store via HTTP requests. Additionally, the service provides a mechanism to produce and
-render widgets via RDFa annotated XHTML forms.</li></br>
-
-<li><b>Client-side JavaScript RDFa API</b> based on jQuery and enables the direct
-interaction between the user (or more precisely the generated widgets) and the Ac-
-tiveRaUL service. The API supports RDFa parsing of the annotated XHTML forms
-and encapsulates the communication with the backend service. A major aspect of
-client-side processing is the transparent databinding of values stored in the backend
-or in the Linked Data Web to controls comprised in the widgets. This includes up-
-dating the RDF triples in the backend and pre-populating existing forms if data is
-available.</li>
-            </ul>
-        <h2><a href="widgets.html">RaUL Widget elements</a></h2>
-        RaUL defines a widget ontology that supports all HTML form elements.
-        Example widget elements are:
-        <ul>
-            <li>
-                <a href="textbox.html">raul:Textbox</a>
-            </li>
-            <li>
-                <a href="group.html">raul:Group</a>
-            </li>
-            <li>
-                <a href="listbox.html">raul:Listbox</a>
-            </li>
-         </ul>
-The full ontology can be found at: <a href="http://purl.org/NET/raul#">http://purl.org/NET/raul#</a>.
-
-        <h2><a href="demo.html">Demo</a></h2>
-        <p>
-        Our use case simulates a second-hand goods trading platform at which registered
-users can sell and buy second-hand goods. For demonstration purposes, and later
-for understanding the value provided by our approach, we consider a scenario in
-which a typical user performs three basic (yet common) operations: registration, selling a product and buying a product. 
-        <ol>
-            <li>
-
-<b>User Registration.</b> A new seller/buyer needs to register for a new user account to
-act on the e-Commerce website. The user requests the registration form, which
-offers him the standard fields to fill in his user data. One option would be to directly use the FOAF profile.</li>
-
-
-<li>
-<b>Product Advertisement.</b> A user, once registered, can add products for selling. The associated form / widget consists of examples of common fields used to describe a product. Similar to the first operation, the user could reuse an existing description of the product on the Linked Data Web, by entering
-the product's URI.</li>
-
-
-<li>
-<b>Bid on a Product.</b> Finally, the user may want to purchase an advertised product.
-The product can be easily found by filling in the form / widget. The user can then bid for the product.</li>
-
-            </li>
-         </ol>
-        </p>
-
-        <h2>Download</h2>
-        <p>
-        The ActiveRaUL Web service is implemented with the Java API for XML Web Services (JAX-WS). Please use the link below to download the latest version of the Web application archive for deployment on an Apache Tomcat server.
-        </p>
-<table>
-<tr>
-<td><a href="war/raul.war">raul.war</a>  | </td><td>21.4 MB</td><td> | Last modified: 21-07-2011</td>
-</tr>
-</table>
-    </div>
-    <div id="footer">&nbsp;</div>
-</div>    
-
+	<footer>
+		<p><a href="about/authors.html">&copy; 2012 </a> &mdash; <b><a href="about/authors.html">About Authors</a></b>. Disclaimer: This project is not officially endorsed by the W3C.</p>
+	</footer>
 </body>
 </html>
